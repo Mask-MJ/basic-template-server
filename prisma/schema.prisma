@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  isAdmin     Boolean  @default(false)
+  account     String   @unique
+  password    String
+  nickname    String?
+  email       String?
+  phoneNumber String?
+  sex         Int      @default(1)
+  status      Int      @default(1)
+  avatar      String?
+  remark      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roles       Role[]
+  deptId      Int?
+  dept        Dept?    @relation(fields: [deptId], references: [id])
+}
+
+model Role {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  value      String       @unique
+  remark     String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  users      User[]
+  menus      Menu[]
+  Permission Permission[]
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  name      String
+  value     String   @unique
+  remark    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roles     Role[]
+}
+
+model Menu {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  path      String   @unique
+  icon      String   @default("")
+  hidden    Boolean  @default(false)
+  status    Int      @default(1)
+  sort      Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roles     Role[]
+  parentId  Int?
+  parent    Menu?    @relation("MenuToMenu", fields: [parentId], references: [id])
+  children  Menu[]   @relation("MenuToMenu")
+}
+
+model Dept {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  parentId  Int      @default(0)
+  status    Int      @default(1)
+  sort      Int      @default(1)
+  remark    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  children  Dept[]   @relation("DeptToDept")
+  parent    Dept?    @relation("DeptToDept", fields: [parentId], references: [id])
+}
+
+model Dict {
+  id        Int      @id @default(autoincrement())
+  name      String
+  value     String
+  remark    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
