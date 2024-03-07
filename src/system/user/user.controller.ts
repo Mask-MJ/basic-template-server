@@ -23,6 +23,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
+import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
 
 @ApiTags('用户管理')
 @ApiBearerAuth('bearer')
@@ -30,6 +31,7 @@ import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Permissions('system:user:create')
   @Post()
   @ApiOperation({ summary: '创建用户' })
   @ApiCreatedResponse({ type: User })

@@ -11,8 +11,9 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationGuard } from './authentication/guards/authentication.guard';
 import { AccessTokenGuard } from './authentication/guards/access-token.guard';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
-import { RolesGuard } from './authorization/guards/roles.guard';
+// import { RolesGuard } from './authorization/guards/roles.guard';
 import { PrismaModule } from 'nestjs-prisma';
+import { PermissionsGuard } from './authorization/guards/permisssions.guard';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { PrismaModule } from 'nestjs-prisma';
   providers: [
     { provide: HashingService, useClass: BcryptService },
     { provide: APP_GUARD, useClass: AuthenticationGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    // { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: PermissionsGuard },
     AccessTokenGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,

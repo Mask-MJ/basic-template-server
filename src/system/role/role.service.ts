@@ -1,26 +1,88 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { PrismaService } from 'nestjs-prisma';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { QueryRoleDto } from './dto/query-role.dto';
 
 @Injectable()
 export class RoleService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createRoleDto: CreateRoleDto) {
+    const existingRoleKey = await this.prisma.role.findUnique({
+      where: { name: createRoleDto.name },
+    });
+    if (existingRoleKey) {
+      throw new NotFoundException('角色键已存在');
+    }
+    return await this.prisma.role.create({
+      data: {
+        ...createRoleDto,
+        menus: {
+          connect: createRoleDto.menus?.map((id) => ({ id })),
+        },
+        permissions: {
+          connect: createRoleDto.permissions?.map((id) => ({ id })),
+        },
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all role`;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    queryRoleDto: QueryRoleDto,
+  ) {
+    const { page, pageSize } = paginationQueryDto;
+    const { name, value } = queryRoleDto;
+    const roles = await this.prisma.role.findMany({
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      where: {
+        name: { contains: name },
+        value: { contains: value },
+      },
+      include: { menus: true },
+    });
+
+    return roles.map((role) => {
+      return {
+        ...role,
+        menus: role.menus.map((menu) => menu.id),
+      };
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: number) {
+    const role = await this.prisma.role.findUniqueOrThrow({
+      where: { id },
+      include: { menus: { select: { id: true } } },
+    });
+
+    return {
+      ...role,
+      menus: role.menus.map((menu) => menu.id),
+    };
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+    return this.prisma.role.update({
+      where: { id },
+      data: {
+        ...updateRoleDto,
+        menus: {
+          connect: updateRoleDto.menus?.map((menuId) => ({ id: menuId })),
+        },
+        permissions: {
+          connect: updateRoleDto.permissions?.map((permissionId) => ({
+            id: permissionId,
+          })),
+        },
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} role`;
+    return this.prisma.role.delete({ where: { id } });
   }
 }

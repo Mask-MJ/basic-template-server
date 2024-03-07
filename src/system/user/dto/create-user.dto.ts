@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   MinLength,
@@ -29,6 +30,7 @@ export class CreateUserDto {
    * @example '管理员'
    */
   @IsString()
+  @IsOptional()
   nickname?: string;
 
   /**
@@ -36,6 +38,7 @@ export class CreateUserDto {
    * @example 'xxx@qq.com'
    */
   @IsEmail()
+  @IsOptional()
   email?: string;
 
   /**
@@ -43,6 +46,7 @@ export class CreateUserDto {
    * @example '18888888888'
    */
   @IsPhoneNumber('CN')
+  @IsOptional()
   phoneNumber?: string;
 
   /**
@@ -50,6 +54,7 @@ export class CreateUserDto {
    * @example 1
    */
   @IsEnum([0, 1])
+  @IsOptional()
   sex?: number;
 
   /**
@@ -57,6 +62,7 @@ export class CreateUserDto {
    * @example 1
    */
   @IsEnum([0, 1])
+  @IsOptional()
   status?: number = 1;
 
   /**
@@ -64,6 +70,7 @@ export class CreateUserDto {
    * @example 'http://xxx.com/xxx.jpg'
    */
   @IsString()
+  @IsOptional()
   avatar?: string;
 
   /**
@@ -71,6 +78,7 @@ export class CreateUserDto {
    * @example '备注'
    */
   @IsString()
+  @IsOptional()
   remark?: string;
 
   /**
@@ -78,6 +86,7 @@ export class CreateUserDto {
    * @example 1
    */
   @IsNumber()
+  @IsOptional()
   deptId?: number;
 
   /**
