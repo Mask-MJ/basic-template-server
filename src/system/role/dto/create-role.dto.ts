@@ -28,11 +28,4 @@ export class CreateRoleDto {
    */
   @IsNumber({}, { each: true, message: '菜单必须是数字' })
   menus?: number[] = [];
-
-  /**
-   * 权限id
-   * @example [1, 2, 3]
-   */
-  @IsNumber({}, { each: true, message: '权限必须是数字' })
-  permissions?: number[] = [];
 }

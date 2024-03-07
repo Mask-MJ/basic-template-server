@@ -1,15 +1,19 @@
 import { Type, Transform } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import dayjs from 'dayjs';
 
-export class QueryRoleDto {
+export class QueryUserDto {
   @IsOptional()
   @IsString()
   name?: string;
 
   @IsOptional()
-  @IsString()
-  value?: string;
+  @IsBoolean()
+  hidden?: boolean;
+
+  @IsOptional()
+  @IsEnum([0, 1])
+  status?: number;
 
   @IsOptional()
   @Type(() => Number)

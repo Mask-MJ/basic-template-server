@@ -4,7 +4,7 @@ import { REQUEST_USER_KEY } from 'src/iam/iam.constants';
 import { PrismaService } from 'nestjs-prisma';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
-import { Permission } from '@prisma/client';
+import { Menu, Permission } from '@prisma/client';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -24,15 +24,20 @@ export class PermissionsGuard implements CanActivate {
     ];
     const userInfo = await this.prismaService.user.findUnique({
       where: { id: user.sub },
-      include: { roles: { include: { permissions: true } } },
+      include: {
+        roles: { include: { menus: { include: { permissions: true } } } },
+      },
     });
     console.log(userInfo);
     if (!userInfo) return false;
-
     const permissionsName = userInfo.roles
-      .reduce((acc, role) => acc.concat(role.permissions), [] as Permission[])
+      .reduce((acc, role) => acc.concat(role.menus), [] as Menu[])
+      // .reduce((acc, menu) => acc.concat(menu.permissions), [] as Permission[])
       .map((p) => p.name);
-    console.log(permissionsName);
+    // const permissionsName = userInfo.roles
+    //   .reduce((acc, role) => acc.concat(role.permissions), [] as Permission[])
+    //   .map((p) => p.name);
+    // console.log(permissionsName);
 
     return contextPermissions.every((permission) =>
       permissionsName.includes(permission),

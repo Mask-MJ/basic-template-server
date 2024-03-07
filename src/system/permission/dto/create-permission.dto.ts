@@ -23,9 +23,9 @@ export class CreatePermissionDto {
   remark?: string = '';
 
   /**
-   * 角色id
-   * @example [1, 2, 3]
+   * 菜单ID
+   * @example 1
    */
-  @IsNumber({}, { each: true, message: '角色id必须是数字' })
-  roles?: number[] = [];
+  @IsNumber()
+  menuId: number;
 }
