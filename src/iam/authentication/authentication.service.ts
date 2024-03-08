@@ -46,7 +46,8 @@ export class AuthenticationService {
       // 如果不存在则创建第一个用户为管理员
 
       // 判断用户名是否存在
-      if (await this.prisma.user.findUnique({ where: { account } })) {
+      const user = await this.prisma.user.findUnique({ where: { account } });
+      if (user) {
         throw new ConflictException('用户名已存在');
       }
       return this.prisma.user.create({

@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMenuDto {
   /**
@@ -48,5 +48,6 @@ export class CreateMenuDto {
    * @example 0
    */
   @IsNumber()
+  @IsOptional()
   parentId?: number;
 }

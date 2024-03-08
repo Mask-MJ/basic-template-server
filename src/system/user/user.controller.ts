@@ -39,6 +39,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Permissions('read:system:user')
   @Get()
   @ApiOperation({ summary: '获取用户列表' })
   @ApiOkResponse({ type: User, isArray: true })

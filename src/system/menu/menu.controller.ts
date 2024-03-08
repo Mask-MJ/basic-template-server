@@ -21,6 +21,7 @@ import {
 import { Menu } from './entities/menu.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { QueryUserDto } from './dto/query-menu.dto';
+import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
 
 @ApiTags('菜单管理')
 @ApiBearerAuth('bearer')
@@ -34,6 +35,7 @@ export class MenuController {
     return this.menuService.create(createMenuDto);
   }
 
+  @Permissions('read:system:menu')
   @Get()
   @ApiOperation({ summary: '获取菜单列表' })
   @ApiOkResponse({ type: Menu, isArray: true })
