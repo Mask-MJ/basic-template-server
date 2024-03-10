@@ -65,6 +65,9 @@ export class AuthenticationService {
   async signIn(signInDto: SignInDto) {
     const user = await this.prisma.user.findUnique({
       where: { account: signInDto.account },
+      include: {
+        roles: { include: { menus: { include: { permissions: true } } } },
+      },
     });
     if (!user) {
       throw new UnauthorizedException('用户名不存在');
@@ -97,7 +100,7 @@ export class AuthenticationService {
         refreshTokenId,
       }),
     ]);
-    await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
+    await this.refreshTokenIdsStorage.insert(user, refreshTokenId);
     return { accessToken, refreshToken };
   }
 

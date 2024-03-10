@@ -28,6 +28,8 @@ import { Permissions } from 'src/iam/authorization/decorators/permissions.decora
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
+
+  @Permissions('create:system:menu')
   @Post()
   @ApiOperation({ summary: '创建菜单' })
   @ApiCreatedResponse({ type: Menu })
@@ -35,7 +37,6 @@ export class MenuController {
     return this.menuService.create(createMenuDto);
   }
 
-  @Permissions('read:system:menu')
   @Get()
   @ApiOperation({ summary: '获取菜单列表' })
   @ApiOkResponse({ type: Menu, isArray: true })

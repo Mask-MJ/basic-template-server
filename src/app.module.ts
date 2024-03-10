@@ -5,9 +5,15 @@ import {
   PrismaModule,
   providePrismaClientExceptionFilter,
 } from 'nestjs-prisma';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PrismaModule.forRoot({ isGlobal: true }), SystemModule, IamModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule.forRoot({ isGlobal: true }),
+    SystemModule,
+    IamModule,
+  ],
   controllers: [],
   providers: [providePrismaClientExceptionFilter()],
 })

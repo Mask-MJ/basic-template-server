@@ -9,8 +9,9 @@ import { MenuController } from './menu/menu.controller';
 import { MenuService } from './menu/menu.service';
 import { RoleController } from './role/role.controller';
 import { RoleService } from './role/role.service';
-import { PermissionController } from './permission/permission.controller';
-import { PermissionService } from './permission/permission.service';
+import { OnlineController } from './online/online.controller';
+import { OnlineService } from './online/online.service';
+import { OnlineIdsStorage } from './online/online-ids.storage';
 
 @Module({
   imports: [RouterModule.register([{ path: 'system', module: SystemModule }])],
@@ -18,14 +19,15 @@ import { PermissionService } from './permission/permission.service';
     UserController,
     MenuController,
     RoleController,
-    PermissionController,
+    OnlineController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
     UserService,
     MenuService,
     RoleService,
-    PermissionService,
+    OnlineService,
+    OnlineIdsStorage,
   ],
 })
 export class SystemModule {}

@@ -5,6 +5,7 @@ import {
   OnApplicationShutdown,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { User } from '@prisma/client';
 import { Redis } from 'ioredis';
 
 export class InvalidatedRefreshTokenError extends Error {}
@@ -16,7 +17,6 @@ export class RefreshTokenIdsStorage
   @Inject(ConfigService)
   private configService: ConfigService;
 
-  // @Inject('REDIS_CLIENT')
   private redisClient: Redis;
 
   onApplicationBootstrap() {
@@ -31,14 +31,22 @@ export class RefreshTokenIdsStorage
   }
 
   // 插入
-  async insert(userId: number, tokenId: string): Promise<void> {
-    // 通过 redis 的 set 方法插入 id 和 token
-    await this.redisClient.set(this.getKey(userId), tokenId);
+  async insert(user: User, tokenId: string): Promise<void> {
+    // 通过 redis 的 hmset 方法插入 user 和 token
+    await this.redisClient.hmset(
+      this.getKey(user.id),
+      'tokenId',
+      tokenId,
+      'user',
+      JSON.stringify(user),
+    );
   }
   // 验证
   async validate(userId: number, tokenId: string): Promise<boolean> {
     // 从 redis 中取出 id 对应的 token , 和传入的 token 做对比
-    const storedId = await this.redisClient.get(this.getKey(userId));
+    const storedId = (
+      await this.redisClient.hmget(this.getKey(userId), 'tokenId')
+    )[0];
     if (storedId !== tokenId) {
       throw new InvalidatedRefreshTokenError();
     }

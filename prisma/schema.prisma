@@ -13,11 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// This comment will get attached to the `User` node in the AST
 model User {
   id          Int        @id @default(autoincrement())
   isAdmin     Boolean    @default(false)
-  account     String     @unique
-  password    String
+  account     String     @unique /// account11
+  /// password11
+  password    String /// password11222
   nickname    String?
   email       String?
   phoneNumber String?
@@ -103,6 +105,13 @@ model LoginLog {
   ip        String
   address   String
   userAgent String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model test {
+  id        Int      @id @default(autoincrement())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
