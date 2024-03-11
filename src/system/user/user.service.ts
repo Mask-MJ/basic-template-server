@@ -53,7 +53,9 @@ export class UserService {
   findSelf(id: number) {
     return this.prisma.user.findUniqueOrThrow({
       where: { id },
-      include: { roles: true },
+      include: {
+        roles: { include: { menus: { include: { permissions: true } } } },
+      },
     });
   }
 
