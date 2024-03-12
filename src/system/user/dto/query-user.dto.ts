@@ -1,5 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import dayjs from 'dayjs';
 
 export class QueryUserDto {
@@ -15,8 +15,6 @@ export class QueryUserDto {
   @IsString()
   email?: string;
 
-  @IsOptional()
-  @IsPhoneNumber('CN')
   phoneNumber?: string;
 
   @IsOptional()
