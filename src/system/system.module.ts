@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
 import { BcryptService } from 'src/iam/hashing/bcrypt.service';
 import { HashingService } from 'src/iam/hashing/hashing.service';
 
@@ -14,7 +13,7 @@ import { OnlineService } from './online/online.service';
 import { OnlineIdsStorage } from './online/online-ids.storage';
 
 @Module({
-  imports: [RouterModule.register([{ path: 'system', module: SystemModule }])],
+  imports: [],
   controllers: [
     UserController,
     MenuController,

@@ -29,11 +29,15 @@ export class RoleService {
     queryRoleDto: QueryRoleDto,
   ) {
     const { page, pageSize } = paginationQueryDto;
-    const { name, value } = queryRoleDto;
+    const { name, value, beginTime, endTime } = queryRoleDto;
     const roles = await this.prisma.role.findMany({
       take: pageSize,
       skip: (page - 1) * pageSize,
-      where: { name: { contains: name }, value: { contains: value } },
+      where: {
+        name: { contains: name },
+        value: { contains: value },
+        createdAt: { gte: beginTime, lte: endTime },
+      },
       include: { menus: true },
     });
 

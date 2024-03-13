@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SystemModule } from 'src/system/system.module';
 import { IamModule } from 'src/iam/iam.module';
+import { RouterModule } from '@nestjs/core';
 import {
   PrismaModule,
   providePrismaClientExceptionFilter,
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule.forRoot({ isGlobal: true }),
     SystemModule,
     IamModule,
+    RouterModule.register([{ path: 'system', module: SystemModule }]),
   ],
   controllers: [],
   providers: [providePrismaClientExceptionFilter()],

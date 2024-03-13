@@ -1,6 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 export class QueryUserDto {
   @IsOptional()

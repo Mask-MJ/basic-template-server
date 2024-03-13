@@ -1,6 +1,6 @@
 import { Type, Transform } from 'class-transformer';
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 export class QueryUserDto {
   @IsOptional()
