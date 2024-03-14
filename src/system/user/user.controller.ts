@@ -23,6 +23,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
+import { ChangePasswordDto } from './dto/change-password.dto';
 // import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
 
 @ApiTags('用户管理')
@@ -60,11 +61,8 @@ export class UserController {
   @Patch('changePassword')
   @ApiOperation({ summary: '修改密码' })
   @ApiOkResponse({ type: User })
-  async changePassword(
-    @ActiveUser() user: ActiveUserData,
-    @Body() { password }: { password: string },
-  ) {
-    return this.userService.changePassword(user.sub, password);
+  async changePassword(@Body() { id, password }: ChangePasswordDto) {
+    return this.userService.changePassword(id, password);
   }
 
   @Get(':id')
