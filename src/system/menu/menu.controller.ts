@@ -21,7 +21,7 @@ import {
 import { Menu } from './entities/menu.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { QueryUserDto } from './dto/query-menu.dto';
-import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
+// import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
 
 @ApiTags('菜单管理')
 @ApiBearerAuth('bearer')
@@ -29,7 +29,7 @@ import { Permissions } from 'src/iam/authorization/decorators/permissions.decora
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
-  @Permissions('create:system:menu')
+  // @Permissions('create:system:menu')
   @Post()
   @ApiOperation({ summary: '创建菜单' })
   @ApiCreatedResponse({ type: Menu })

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3001:3000
+      - ${PORT}:3000
     depends_on:
       # - postgres
       - redis
@@ -30,19 +30,19 @@ services:
     container_name: redis
     restart: always
     ports:
-      - ${REDIS_PORT}:6379
+      # - ${REDIS_PORT}:6379
     volumes:
-      - /var/www/vls/redis:/data
+      - /var/www/basic/redis:/data
   minio:
     image: bitnami/minio
     container_name: minio
     restart: always
     privileged: true
     ports:
-      - ${MINIO_PORT}:9000
-      - ${MINIO_CLIENT_PORT}:9001
+      # - ${MINIO_PORT}:9000
+      # - ${MINIO_CLIENT_PORT}:9001
     env_file:
       - .env
     volumes:
-      - /var/www/vls/minio/data:/data
-      - /var/www/vls/minio/config:/root/.minio
+      - /var/www/basic/minio/data:/data
+      - /var/www/basic/minio/config:/root/.minio

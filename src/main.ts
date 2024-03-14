@@ -17,10 +17,11 @@ async function bootstrap() {
   // prisma 异常过滤器
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
+  // 获取环境变量
+  const { APP_NAME, PORT } = process.env;
   const config = new DocumentBuilder()
-    .setTitle('Valve Lifecycle Service 接口文档')
-    .setDescription('The Valve Lifecycle Service API description')
+    .setTitle(`${APP_NAME} 接口文档`)
+    .setDescription(`The ${APP_NAME} API escription`)
     .setVersion('1.0')
     .addBearerAuth({
       type: 'http',
@@ -34,6 +35,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
 
-  await app.listen(3000);
+  await app.listen(Number(PORT) || 3000);
 }
 bootstrap();
