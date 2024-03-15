@@ -50,6 +50,9 @@ dependencies:
   ioredis:
     specifier: ^5.3.2
     version: 5.3.2
+  ip2region:
+    specifier: ^2.3.0
+    version: 2.3.0(@types/node@20.11.24)
   nestjs-prisma:
     specifier: ^0.23.0
     version: 0.23.0(@nestjs/common@10.3.3)(@prisma/client@5.10.2)(prisma@5.10.2)
@@ -3494,6 +3497,14 @@ packages:
       standard-as-callback: 2.1.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /ip2region@2.3.0(@types/node@20.11.24):
+    resolution: {integrity: sha512-zV5Xsadzrx9Ej6heoyhbXMsfGWWQ3C6bAIYStrHhw9kzLpGpVNlnAyRBxxPgxA1GNqr1Ti7oUxcWsMWNN3jZBg==}
+    peerDependencies:
+      '@types/node': '*'
+    dependencies:
+      '@types/node': 20.11.24
     dev: false
 
   /ipaddr.js@1.9.1:

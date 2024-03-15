@@ -1,16 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnlineIdsStorage } from './online-ids.storage';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { QueryUserDto } from '../user/dto/query-user.dto';
+import { PrismaService } from 'nestjs-prisma';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
+import jwtConfig from 'src/iam/config/jwt.config';
 
 @Injectable()
 export class OnlineService {
-  constructor(private readonly onlineIdsStorage: OnlineIdsStorage) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly onlineIdsStorage: OnlineIdsStorage,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+  ) {}
 
-  findAll() {
-    this.onlineIdsStorage.findAll();
-    return `This action returns all online`;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    queryUserDto: QueryUserDto,
+  ) {
+    const users = await this.onlineIdsStorage.findAll();
+    const userIds = users.map((item) => Number(item.id));
+    const { page, pageSize } = paginationQueryDto;
+    const { account, nickname, status, beginTime, endTime } = queryUserDto;
+    return this.prisma.user.findMany({
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      where: {
+        id: { in: userIds },
+        account: { contains: account },
+        nickname: { contains: nickname },
+        status: status,
+        createdAt: { gte: beginTime, lte: endTime },
+      },
+      include: { roles: true },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} online`;
+  async remove(id: number) {
+    await this.jwtService.signAsync(
+      { sub: id },
+      { secret: this.jwtConfiguration.secret, expiresIn: 0 },
+    );
+    return this.onlineIdsStorage.remove(id);
   }
 }

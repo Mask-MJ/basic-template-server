@@ -37,6 +37,8 @@ export class RefreshTokenIdsStorage
       this.getKey(user.id),
       'tokenId',
       tokenId,
+      'id',
+      user.id,
       'user',
       JSON.stringify(user),
     );

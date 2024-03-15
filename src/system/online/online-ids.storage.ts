@@ -30,10 +30,15 @@ export class OnlineIdsStorage
   async findAll() {
     // 获取所有的以 user- 开头的 key
     const keys = await this.redisClient.keys('user-*');
-    console.log(keys);
+    // 根据 key 获取所有的值
+    const values = await Promise.all(
+      keys.map((key) => this.redisClient.hgetall(key)),
+    );
+    return values;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} online`;
+    // 删除 redis 中 id 对应的数据
+    return this.redisClient.del(`user-${id}`);
   }
 }

@@ -1,6 +1,14 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
 import { OnlineService } from './online.service';
-import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { User } from '../user/entities/user.entity';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { QueryUserDto } from '../user/dto/query-user.dto';
 
 @ApiTags('在线用户管理')
 @ApiBearerAuth('bearer')
@@ -10,8 +18,12 @@ export class OnlineController {
 
   @Get()
   @ApiOperation({ summary: '获取在线用户列表' })
-  findAll() {
-    return this.onlineService.findAll();
+  @ApiOkResponse({ type: User, isArray: true })
+  findAll(
+    @Query() paginationQueryDto: PaginationQueryDto,
+    @Query() queryUserDto: QueryUserDto,
+  ) {
+    return this.onlineService.findAll(paginationQueryDto, queryUserDto);
   }
 
   @Delete(':id')

@@ -11,14 +11,23 @@ import { RoleService } from './role/role.service';
 import { OnlineController } from './online/online.controller';
 import { OnlineService } from './online/online.service';
 import { OnlineIdsStorage } from './online/online-ids.storage';
+import { LogController } from './log/log.controller';
+import { LogService } from './log/log.service';
+import { JwtModule } from '@nestjs/jwt';
+import jwtConfig from 'src/iam/config/jwt.config';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
+  imports: [
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+    ConfigModule.forFeature(jwtConfig),
+  ],
   controllers: [
     UserController,
     MenuController,
     RoleController,
     OnlineController,
+    LogController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
@@ -27,6 +36,7 @@ import { OnlineIdsStorage } from './online/online-ids.storage';
     RoleService,
     OnlineService,
     OnlineIdsStorage,
+    LogService,
   ],
 })
 export class SystemModule {}
