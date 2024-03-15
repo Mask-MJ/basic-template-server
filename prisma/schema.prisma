@@ -13,13 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This comment will get attached to the `User` node in the AST
 model User {
   id          Int        @id @default(autoincrement())
   isAdmin     Boolean    @default(false)
-  account     String     @unique /// account11
-  /// password11
-  password    String /// password11222
+  account     String     @unique
+  password    String
   nickname    String?
   email       String?
   phoneNumber String?
@@ -33,6 +31,7 @@ model User {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   LoginLog    LoginLog[]
+  Record      Record[]
 }
 
 model Role {
@@ -109,9 +108,18 @@ model LoginLog {
   updatedAt DateTime @updatedAt
 }
 
-model test {
+model Record {
   id        Int      @id @default(autoincrement())
-  name      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  /// 操作动作
+  action    String
+  /// 操作模块
+  module    String
+  /// 信息
+  message   String
+  /// 详情
+  detail    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
