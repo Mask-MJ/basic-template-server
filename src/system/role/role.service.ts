@@ -30,20 +30,22 @@ export class RoleService {
   ) {
     const { page, pageSize } = paginationQueryDto;
     const { name, value, beginTime, endTime } = queryRoleDto;
-    const roles = await this.prisma.role.findMany({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where: {
-        name: { contains: name },
-        value: { contains: value },
-        createdAt: { gte: beginTime, lte: endTime },
-      },
-      include: { menus: true },
-    });
+    const where = {
+      name: { contains: name },
+      value: { contains: value },
+      createdAt: { gte: beginTime, lte: endTime },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.role.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+        include: { menus: true },
+      }),
+      this.prisma.role.count({ where }),
+    ]);
 
-    return roles.map((role) => {
-      return { ...role, menus: role.menus.map((menu) => menu.id) };
-    });
+    return { data, total, page, pageSize };
   }
 
   async findOne(id: number) {

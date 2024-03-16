@@ -36,18 +36,23 @@ export class UserService {
   ) {
     const { page, pageSize } = paginationQueryDto;
     const { account, nickname, status, beginTime, endTime } = queryUserDto;
+    const where = {
+      account: { contains: account },
+      nickname: { contains: nickname },
+      status,
+      createdAt: { gte: beginTime, lte: endTime },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.user.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+        include: { roles: true },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
 
-    return this.prisma.user.findMany({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where: {
-        account: { contains: account },
-        nickname: { contains: nickname },
-        status: status,
-        createdAt: { gte: beginTime, lte: endTime },
-      },
-      include: { roles: true },
-    });
+    return { data, total, page, pageSize };
   }
 
   findSelf(id: number) {

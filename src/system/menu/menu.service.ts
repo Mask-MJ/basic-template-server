@@ -35,19 +35,27 @@ export class MenuService {
     });
   }
 
-  findAll(paginationQueryDto: PaginationQueryDto, queryUserDto: QueryUserDto) {
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    queryUserDto: QueryUserDto,
+  ) {
     const { page, pageSize } = paginationQueryDto;
     const { name, status, beginTime, endTime } = queryUserDto;
-    return this.prisma.menu.findMany({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where: {
-        name: { contains: name },
-        status: status,
-        createdAt: { gte: beginTime, lte: endTime },
-      },
-      include: { permissions: true },
-    });
+    const where = {
+      name: { contains: name },
+      status,
+      createdAt: { gte: beginTime, lte: endTime },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.menu.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+        include: { permissions: true },
+      }),
+      this.prisma.menu.count({ where }),
+    ]);
+    return { data, total, page, pageSize };
   }
 
   async findOne(id: number) {

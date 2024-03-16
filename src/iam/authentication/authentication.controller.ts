@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -7,6 +14,7 @@ import { AuthType } from './enums/auth-type.enum';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { Request as ExpRequest } from 'express';
 
 @ApiTags('登录认证')
 @Auth(AuthType.None)
@@ -31,8 +39,8 @@ export class AuthenticationController {
     status: HttpStatus.UNAUTHORIZED,
     description: '用户名或密码错误',
   })
-  async signIn(@Body() signInDto: SignInDto) {
-    return this.authService.signIn(signInDto);
+  async signIn(@Request() request: ExpRequest, @Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto, request);
   }
 
   @HttpCode(HttpStatus.OK)

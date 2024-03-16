@@ -20,12 +20,15 @@ import { HashingService } from '../hashing/hashing.service';
 import { PrismaService } from 'nestjs-prisma';
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { LogService } from 'src/system/log/log.service';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
+    private readonly logService: LogService,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -62,7 +65,7 @@ export class AuthenticationService {
     }
   }
 
-  async signIn(signInDto: SignInDto) {
+  async signIn(signInDto: SignInDto, request: Request) {
     const user = await this.prisma.user.findUnique({
       where: { account: signInDto.account },
       include: {
@@ -79,6 +82,14 @@ export class AuthenticationService {
     if (!isEquals) {
       throw new UnauthorizedException('密码错误');
     }
+    // 记录登录日志
+    // const { ip, address } = signInDto;
+    await this.logService.create({
+      userId: user.id,
+      account: user.account,
+      ip: request.ip || '',
+      userAgent: '登录',
+    });
 
     // 生成 access token
     return await this.generateTokens(user);

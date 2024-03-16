@@ -25,18 +25,23 @@ export class OnlineService {
     const userIds = users.map((item) => Number(item.id));
     const { page, pageSize } = paginationQueryDto;
     const { account, nickname, status, beginTime, endTime } = queryUserDto;
-    return this.prisma.user.findMany({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where: {
-        id: { in: userIds },
-        account: { contains: account },
-        nickname: { contains: nickname },
-        status: status,
-        createdAt: { gte: beginTime, lte: endTime },
-      },
-      include: { roles: true },
-    });
+    const where = {
+      id: { in: userIds },
+      account: { contains: account },
+      nickname: { contains: nickname },
+      status,
+      createdAt: { gte: beginTime, lte: endTime },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.user.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+        include: { roles: true },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+    return { data, total, page, pageSize };
   }
 
   async remove(id: number) {

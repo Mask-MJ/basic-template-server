@@ -12,6 +12,9 @@ export class FormatResponse implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
+        if (data && data.data) {
+          data.data.map((item: any) => changeTime(item));
+        }
         return Array.isArray(data)
           ? data.map((item) => changeTime(item))
           : changeTime(data);
