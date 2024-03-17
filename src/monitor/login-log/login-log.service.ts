@@ -1,30 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-import { QueryLogDto } from './dto/query-log.dto';
-import { CreateLogDto } from './dto/create-log.dto';
 import IP2Region from 'ip2region';
+import { CreateLoginLogDto } from './dto/create-login-log.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { QueryLoginLogDto } from './dto/query-login-log.dto';
 
 @Injectable()
-export class LogService {
+export class LoginLogService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createLogDto: CreateLogDto) {
+  async create(createLoginLogDto: CreateLoginLogDto) {
     const query = new IP2Region();
-    const addressInfo = query.search(createLogDto.ip);
-    console.log(addressInfo);
+    const addressInfo = query.search(createLoginLogDto.ip);
     const address = addressInfo ? addressInfo.province + addressInfo.city : '';
     return this.prisma.loginLog.create({
-      data: { ...createLogDto, address },
+      data: { ...createLoginLogDto, address },
     });
   }
 
   async findAll(
     paginationQueryDto: PaginationQueryDto,
-    queryLogDto: QueryLogDto,
+    queryLoginLogDto: QueryLoginLogDto,
   ) {
     const { page, pageSize } = paginationQueryDto;
-    const { account, address, beginTime, endTime } = queryLogDto;
+    const { account, address, beginTime, endTime } = queryLoginLogDto;
     const where = {
       account: { contains: account },
       address: { contains: address },

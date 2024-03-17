@@ -5,12 +5,15 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { HashingService } from 'src/iam/hashing/hashing.service';
+import { RecordLogService } from 'src/monitor/record-log/record-log.service';
+import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
+    private readonly recordLogService: RecordLogService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -97,7 +100,19 @@ export class UserService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.user.delete({ where: { id } });
+  async remove(user: ActiveUserData, id: number) {
+    const userToDelete = await this.prisma.user.findUniqueOrThrow({
+      where: { id },
+    });
+    const deleteUser = await this.prisma.user.delete({ where: { id } });
+    await this.recordLogService.create({
+      userId: user.sub,
+      account: user.account,
+      module: '用户管理',
+      action: '删除',
+      message: '删除用户',
+      detail: `删除用户名为 ${userToDelete.nickname}, 账号为 ${userToDelete.account} 的用户`,
+    });
+    return deleteUser;
   }
 }

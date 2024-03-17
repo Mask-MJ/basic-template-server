@@ -1,19 +1,19 @@
 import { Type, Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import * as dayjs from 'dayjs';
 
-export class QueryMenuDto {
+export class QueryRecordLogDto {
   @IsOptional()
   @IsString()
-  name?: string;
+  account?: string;
 
   @IsOptional()
-  @IsBoolean()
-  hidden?: boolean;
+  @IsString()
+  action?: string;
 
   @IsOptional()
-  @IsEnum([0, 1])
-  status?: number;
+  @IsString()
+  module?: string;
 
   @IsOptional()
   @Type(() => Number)

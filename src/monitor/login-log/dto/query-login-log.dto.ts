@@ -2,7 +2,7 @@ import { Type, Transform } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
 import * as dayjs from 'dayjs';
 
-export class QueryLogDto {
+export class QueryLoginLogDto {
   @IsOptional()
   @IsString()
   account?: string;

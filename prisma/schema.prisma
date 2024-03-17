@@ -14,24 +14,24 @@ datasource db {
 }
 
 model User {
-  id          Int        @id @default(autoincrement())
-  isAdmin     Boolean    @default(false)
-  account     String     @unique
+  id          Int         @id @default(autoincrement())
+  isAdmin     Boolean     @default(false)
+  account     String      @unique
   password    String
   nickname    String?
   email       String?
   phoneNumber String?
-  sex         Int        @default(1)
-  status      Int        @default(1)
+  sex         Int         @default(1)
+  status      Int         @default(1)
   avatar      String?
   remark      String?
   roles       Role[]
   deptId      Int?
-  dept        Dept?      @relation(fields: [deptId], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  dept        Dept?       @relation(fields: [deptId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   LoginLog    LoginLog[]
-  Record      Record[]
+  RecordLog   RecordLog[]
 }
 
 model Role {
@@ -108,10 +108,11 @@ model LoginLog {
   updatedAt DateTime @updatedAt
 }
 
-model Record {
+model RecordLog {
   id        Int      @id @default(autoincrement())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  account   String
   /// 操作动作
   action    String
   /// 操作模块
@@ -119,7 +120,7 @@ model Record {
   /// 信息
   message   String
   /// 详情
-  detail    String
+  detail    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

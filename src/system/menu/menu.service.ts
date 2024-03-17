@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-import { QueryUserDto } from './dto/query-menu.dto';
+import { QueryMenuDto } from './dto/query-menu.dto';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
@@ -37,10 +37,10 @@ export class MenuService {
 
   async findAll(
     paginationQueryDto: PaginationQueryDto,
-    queryUserDto: QueryUserDto,
+    queryMenuDto: QueryMenuDto,
   ) {
     const { page, pageSize } = paginationQueryDto;
-    const { name, status, beginTime, endTime } = queryUserDto;
+    const { name, status, beginTime, endTime } = queryMenuDto;
     const where = {
       name: { contains: name },
       status,

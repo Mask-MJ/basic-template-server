@@ -14,7 +14,7 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.stora
 // import { RolesGuard } from './authorization/guards/roles.guard';
 import { PrismaModule } from 'nestjs-prisma';
 import { PermissionsGuard } from './authorization/guards/permisssions.guard';
-import { LogService } from 'src/system/log/log.service';
+import { LoginLogService } from 'src/monitor/login-log/login-log.service';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { LogService } from 'src/system/log/log.service';
     AccessTokenGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,
-    LogService,
+    LoginLogService,
   ],
   controllers: [AuthenticationController],
 })

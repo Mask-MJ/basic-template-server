@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+
+import jwtConfig from 'src/iam/config/jwt.config';
 import { BcryptService } from 'src/iam/hashing/bcrypt.service';
 import { HashingService } from 'src/iam/hashing/hashing.service';
+import { RecordLogService } from 'src/monitor/record-log/record-log.service';
 
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
@@ -11,11 +16,10 @@ import { RoleService } from './role/role.service';
 import { OnlineController } from './online/online.controller';
 import { OnlineService } from './online/online.service';
 import { OnlineIdsStorage } from './online/online-ids.storage';
-import { LogController } from './log/log.controller';
-import { LogService } from './log/log.service';
-import { JwtModule } from '@nestjs/jwt';
-import jwtConfig from 'src/iam/config/jwt.config';
-import { ConfigModule } from '@nestjs/config';
+import { DeptController } from './dept/dept.controller';
+import { DeptService } from './dept/dept.service';
+import { DictController } from './dict/dict.controller';
+import { DictService } from './dict/dict.service';
 
 @Module({
   imports: [
@@ -27,7 +31,8 @@ import { ConfigModule } from '@nestjs/config';
     MenuController,
     RoleController,
     OnlineController,
-    LogController,
+    DeptController,
+    DictController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
@@ -36,7 +41,9 @@ import { ConfigModule } from '@nestjs/config';
     RoleService,
     OnlineService,
     OnlineIdsStorage,
-    LogService,
+    DeptService,
+    DictService,
+    RecordLogService,
   ],
 })
 export class SystemModule {}

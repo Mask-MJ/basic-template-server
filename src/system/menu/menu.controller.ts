@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { Menu } from './entities/menu.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-import { QueryUserDto } from './dto/query-menu.dto';
+import { QueryMenuDto } from './dto/query-menu.dto';
 // import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
 
 @ApiTags('菜单管理')
@@ -42,9 +42,9 @@ export class MenuController {
   @ApiOkResponse({ type: Menu, isArray: true })
   findAll(
     @Query() paginationQueryDto: PaginationQueryDto,
-    @Query() queryUserDto: QueryUserDto,
+    @Query() queryMenuDto: QueryMenuDto,
   ) {
-    return this.menuService.findAll(paginationQueryDto, queryUserDto);
+    return this.menuService.findAll(paginationQueryDto, queryMenuDto);
   }
 
   @Get(':id')

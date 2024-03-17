@@ -1,6 +1,6 @@
-import { LoginLog } from '@prisma/client';
+import { LoginLog as LoginLogEntity } from '@prisma/client';
 
-export class Log implements LoginLog {
+export class LoginLog implements LoginLogEntity {
   id: number;
   userId: number;
   account: string;
@@ -9,5 +9,4 @@ export class Log implements LoginLog {
   userAgent: string;
   createdAt: Date;
   updatedAt: Date;
-  user: number;
 }

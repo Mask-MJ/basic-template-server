@@ -20,7 +20,7 @@ import { HashingService } from '../hashing/hashing.service';
 import { PrismaService } from 'nestjs-prisma';
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { LogService } from 'src/system/log/log.service';
+import { LoginLogService } from 'src/monitor/login-log/login-log.service';
 import { Request } from 'express';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class AuthenticationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
-    private readonly logService: LogService,
+    private readonly loginlogService: LoginLogService,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -84,7 +84,7 @@ export class AuthenticationService {
     }
     // 记录登录日志
     // const { ip, address } = signInDto;
-    await this.logService.create({
+    await this.loginlogService.create({
       userId: user.id,
       account: user.account,
       ip: request.ip || '',

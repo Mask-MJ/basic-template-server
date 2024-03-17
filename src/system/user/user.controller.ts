@@ -82,7 +82,7 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: '删除用户' })
   @ApiOkResponse({ type: User })
-  remove(@Param('id') id: number) {
-    return this.userService.remove(id);
+  remove(@ActiveUser() user: ActiveUserData, @Param('id') id: number) {
+    return this.userService.remove(user, id);
   }
 }
