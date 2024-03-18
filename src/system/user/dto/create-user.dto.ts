@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -55,6 +56,7 @@ export class CreateUserDto {
    */
   @IsEnum([0, 1])
   @IsOptional()
+  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
   sex?: number;
 
   /**
@@ -63,6 +65,7 @@ export class CreateUserDto {
    */
   @IsEnum([0, 1])
   @IsOptional()
+  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
   status?: number = 1;
 
   /**

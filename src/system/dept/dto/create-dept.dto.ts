@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
@@ -21,6 +22,7 @@ export class CreateDeptDto {
    */
   @IsEnum([0, 1])
   @IsOptional()
+  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
   status?: number = 1;
 
   /**

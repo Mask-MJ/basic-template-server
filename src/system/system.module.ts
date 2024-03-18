@@ -20,6 +20,8 @@ import { DeptController } from './dept/dept.controller';
 import { DeptService } from './dept/dept.service';
 import { DictController } from './dict/dict.controller';
 import { DictService } from './dict/dict.service';
+import { DictDataController } from './dict-data/dict-data.controller';
+import { DictDataService } from './dict-data/dict-data.service';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { DictService } from './dict/dict.service';
     OnlineController,
     DeptController,
     DictController,
+    DictDataController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
@@ -44,6 +47,7 @@ import { DictService } from './dict/dict.service';
     DeptService,
     DictService,
     RecordLogService,
+    DictDataService,
   ],
 })
 export class SystemModule {}

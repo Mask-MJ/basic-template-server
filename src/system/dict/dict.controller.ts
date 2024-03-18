@@ -61,7 +61,6 @@ export class DictController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除字典' })
-  @ApiOkResponse({ type: Dict })
   remove(@Param('id') id: number) {
     return this.dictService.remove(id);
   }

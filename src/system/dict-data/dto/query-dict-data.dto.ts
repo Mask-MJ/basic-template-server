@@ -1,20 +1,15 @@
-import { Type, Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsOptional, IsString } from 'class-validator';
 import * as dayjs from 'dayjs';
 
-export class QueryMenuDto {
+export class QueryDictDataDto {
   @IsOptional()
   @IsString()
   name?: string;
 
   @IsOptional()
-  @IsBoolean()
-  hidden?: boolean;
-
-  @IsOptional()
-  @IsEnum([0, 1])
-  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
-  status?: number;
+  @IsString()
+  value?: string;
 
   @IsOptional()
   @Type(() => Number)
