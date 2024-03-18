@@ -76,7 +76,7 @@ model Permission {
 model Dept {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  parentId  Int      @default(0)
+  parentId  Int?
   status    Int      @default(1)
   sort      Int      @default(1)
   remark    String?
@@ -88,9 +88,22 @@ model Dept {
 }
 
 model Dict {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   value     String
+  remark    String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  DictData  DictData[]
+}
+
+model DictData {
+  id        Int      @id @default(autoincrement())
+  dictId    Int
+  dict      Dict     @relation(fields: [dictId], references: [id])
+  name      String
+  value     String
+  sort      Int      @default(1)
   remark    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

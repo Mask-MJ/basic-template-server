@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDictDto } from './dto/create-dict.dto';
 import { UpdateDictDto } from './dto/update-dict.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { QueryDictDto } from './dto/query-dict.dto';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class DictService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createDictDto: CreateDictDto) {
-    return 'This action adds a new dict';
+    return this.prisma.dict.create({ data: createDictDto });
   }
 
-  findAll() {
-    return `This action returns all dict`;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    queryDictDto: QueryDictDto,
+  ) {
+    const { page, pageSize } = paginationQueryDto;
+    const { name, value, beginTime, endTime } = queryDictDto;
+    const where = {
+      name: { contains: name },
+      value: { contains: value },
+      createdAt: { gte: beginTime, lte: endTime },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.dict.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+      }),
+      this.prisma.dict.count({ where }),
+    ]);
+    return { data, total, page, pageSize };
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} dict`;
+    return this.prisma.dict.findUnique({ where: { id } });
   }
 
   update(id: number, updateDictDto: UpdateDictDto) {
-    return `This action updates a #${id} dict`;
+    return this.prisma.dict.update({ where: { id }, data: updateDictDto });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} dict`;
+    return this.prisma.dict.delete({ where: { id } });
   }
 }

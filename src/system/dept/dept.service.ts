@@ -30,6 +30,7 @@ export class DeptService {
         take: pageSize,
         skip: (page - 1) * pageSize,
         where,
+        // include: { children: true },
       }),
       this.prisma.dept.count({ where }),
     ]);

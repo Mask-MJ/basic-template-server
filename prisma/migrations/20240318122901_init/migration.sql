@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Dept" ALTER COLUMN "parentId" DROP DEFAULT;
