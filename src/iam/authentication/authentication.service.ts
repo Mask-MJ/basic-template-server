@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 
 import { SignUpDto } from './dto/sign-up.dto';
@@ -33,6 +34,7 @@ export class AuthenticationService {
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
+    private readonly logger: Logger,
   ) {}
 
   // 生成 access token 传入 用户 id, 过期时间, payload
@@ -84,6 +86,7 @@ export class AuthenticationService {
     }
     // 记录登录日志
     // const { ip, address } = signInDto;
+    this.logger.log('登录', AuthenticationService.name);
     await this.loginlogService.create({
       userId: user.id,
       account: user.account,

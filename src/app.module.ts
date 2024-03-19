@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import {
   PrismaModule,
@@ -23,6 +23,6 @@ import { MonitorModule } from 'src/monitor/monitor.module';
     MonitorModule,
   ],
   controllers: [],
-  providers: [providePrismaClientExceptionFilter()],
+  providers: [Logger, providePrismaClientExceptionFilter()],
 })
 export class AppModule {}
