@@ -5,13 +5,31 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { FormatResponse } from 'src/common/interceptor/response.interceptor';
-import { WinstonModule } from 'nest-winston';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // 日志
     logger: WinstonModule.createLogger({
-      // options (same as WinstonModule.forRoot() options)
+      transports: [
+        new winston.transports.DailyRotateFile({
+          level: 'info',
+          dirname: 'logs',
+          filename: '%DATE%.log',
+          datePattern: 'YYYY-MM-DD-HH-mm',
+        }),
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestWinstonModuleUtilities.format.nestLike(),
+          ),
+        }),
+      ],
     }),
   });
   app.setGlobalPrefix('api');

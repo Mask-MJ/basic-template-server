@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -31,6 +31,7 @@ import { LoginLogService } from 'src/monitor/login-log/login-log.service';
     RefreshTokenIdsStorage,
     AuthenticationService,
     LoginLogService,
+    Logger,
   ],
   controllers: [AuthenticationController],
 })

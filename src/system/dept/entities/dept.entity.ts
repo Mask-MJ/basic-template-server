@@ -7,6 +7,7 @@ export class Dept implements DeptEntity {
   sort: number;
   parentId: number;
   remark: string | null;
+  // children: Dept[];
   createdAt: Date;
   updatedAt: Date;
 }
