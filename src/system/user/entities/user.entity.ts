@@ -12,6 +12,7 @@ export class User implements UserEntity {
   status: number;
   deptId: number | null;
   remark: string | null;
+  factoryId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }

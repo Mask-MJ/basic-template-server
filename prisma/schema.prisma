@@ -32,6 +32,8 @@ model User {
   updatedAt   DateTime    @updatedAt
   LoginLog    LoginLog[]
   RecordLog   RecordLog[]
+  Factory     Factory?    @relation(fields: [factoryId], references: [id])
+  factoryId   Int?
 }
 
 model Role {
@@ -134,6 +136,34 @@ model RecordLog {
   message   String
   /// 详情
   detail    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Factory {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  status    Int       @default(1)
+  address   String    @default("")
+  location  Int[]     @default([])
+  remark    String?
+  children  Factory[] @relation("FactoryToFactory")
+  parent    Factory?  @relation("FactoryToFactory", fields: [parentId], references: [id])
+  parentId  Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createrId Int
+  users     User[]
+  valves    Valve[]
+}
+
+model Valve {
+  id        Int      @id @default(autoincrement())
+  name      String
+  status    Int      @default(1)
+  remark    String   @default("")
+  factoryId Int
+  factory   Factory  @relation(fields: [factoryId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

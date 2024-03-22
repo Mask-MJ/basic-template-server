@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { IamModule } from 'src/iam/iam.module';
 import { SystemModule } from 'src/system/system.module';
 import { MonitorModule } from 'src/monitor/monitor.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -17,10 +18,12 @@ import { MonitorModule } from 'src/monitor/monitor.module';
     SystemModule,
     IamModule,
     RouterModule.register([
+      { path: 'project', module: ProjectModule },
       { path: 'system', module: SystemModule },
       { path: 'monitor', module: MonitorModule },
     ]),
     MonitorModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [Logger, providePrismaClientExceptionFilter()],
