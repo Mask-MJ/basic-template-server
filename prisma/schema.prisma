@@ -30,21 +30,21 @@ model User {
   dept        Dept?       @relation(fields: [deptId], references: [id])
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  LoginLog    LoginLog[]
-  RecordLog   RecordLog[]
-  Factory     Factory?    @relation(fields: [factoryId], references: [id])
-  factoryId   Int?
+  loginLog    LoginLog[]
+  recordLog   RecordLog[]
+  factory     Factory[]
 }
 
 model Role {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  value     String   @unique
+  value     String    @unique
   remark    String?
   users     User[]
   menus     Menu[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  factory   Factory[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Menu {
@@ -70,7 +70,7 @@ model Permission {
   value     String   @unique
   remark    String?
   menuId    Int?
-  Menu      Menu?    @relation(fields: [menuId], references: [id])
+  menu      Menu?    @relation(fields: [menuId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -96,7 +96,7 @@ model Dict {
   remark    String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  DictData  DictData[]
+  dictData  DictData[]
 }
 
 model DictData {
@@ -153,8 +153,9 @@ model Factory {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   createrId Int
-  users     User[]
+  creater   User      @relation(fields: [createrId], references: [id])
   valves    Valve[]
+  role      Role[]
 }
 
 model Valve {

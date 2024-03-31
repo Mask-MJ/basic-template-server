@@ -10,7 +10,14 @@ export class DictService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(createDictDto: CreateDictDto) {
-    return this.prisma.dict.create({ data: createDictDto });
+    return this.prisma.dict.create({
+      data: {
+        ...createDictDto,
+        dictData: {
+          connect: createDictDto.dictData?.map((id) => ({ id })),
+        },
+      },
+    });
   }
 
   async findAll(
@@ -40,7 +47,15 @@ export class DictService {
   }
 
   update(id: number, updateDictDto: UpdateDictDto) {
-    return this.prisma.dict.update({ where: { id }, data: updateDictDto });
+    return this.prisma.dict.update({
+      where: { id },
+      data: {
+        ...updateDictDto,
+        dictData: {
+          connect: updateDictDto.dictData?.map((id) => ({ id })),
+        },
+      },
+    });
   }
 
   remove(id: number) {

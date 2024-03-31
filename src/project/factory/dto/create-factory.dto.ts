@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateFactoryDto {
   /**
@@ -45,9 +45,10 @@ export class CreateFactoryDto {
   valves?: number[] = [];
 
   /**
-   * 可查看人员id
-   * @example [1, 2, 3]
+   * 父级id
+   * @example 1
    */
-  @IsNumber({}, { each: true })
-  users?: number[] = [];
+  @IsNumber()
+  @IsOptional()
+  parentId?: number;
 }

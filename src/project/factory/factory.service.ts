@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 import { QueryFactoryDto } from './dto/query-factory.dto';
+import { transformTree } from 'src/common/utils/transformTree';
 
 @Injectable()
 export class FactoryService {
@@ -21,11 +22,6 @@ export class FactoryService {
       data: {
         ...createFactoryDto,
         createrId: user.sub,
-        users: {
-          connect: createFactoryDto.users
-            ?.map((id) => ({ id }))
-            .concat({ id: user.sub }),
-        },
         valves: {
           connect: createFactoryDto.valves?.map((id) => ({ id })),
         },
@@ -39,7 +35,7 @@ export class FactoryService {
     queryFactoryDto: QueryFactoryDto,
   ) {
     const { page, pageSize } = paginationQueryDto;
-    const { name, status } = queryFactoryDto;
+    const { name, status, all } = queryFactoryDto;
     // const userInfo = await this.prisma.user.findUnique({
     //   where: { id: user.sub },
     //   include: { roles: true },
@@ -52,24 +48,21 @@ export class FactoryService {
     };
     const [data, total] = await Promise.all([
       this.prisma.factory.findMany({
-        take: pageSize,
-        skip: (page - 1) * pageSize,
+        take: all ? undefined : pageSize,
+        skip: all ? undefined : (page - 1) * pageSize,
         where,
-        include: { users: true },
       }),
       this.prisma.factory.count({ where }),
     ]);
-    return { data, total, page, pageSize };
+    return { data: transformTree(data), total, page, pageSize };
   }
 
   async findOne(id: number) {
     const factory = await this.prisma.factory.findUniqueOrThrow({
       where: { id },
-      include: { users: true },
     });
     return {
       ...factory,
-      users: factory.users.map((user) => user.id),
     };
   }
 
@@ -78,9 +71,6 @@ export class FactoryService {
       where: { id },
       data: {
         ...updateFactoryDto,
-        users: {
-          set: updateFactoryDto.users?.map((userId) => ({ id: userId })),
-        },
         valves: {
           connect: updateFactoryDto.valves?.map((id) => ({ id })),
         },
