@@ -1,8 +1,12 @@
 import { Transform, Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import * as dayjs from 'dayjs';
 
 export class QueryDictDataDto {
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  dictId: number;
+
   @IsOptional()
   @IsString()
   name?: string;

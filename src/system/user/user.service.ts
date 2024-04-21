@@ -7,13 +7,14 @@ import { PrismaService } from 'nestjs-prisma';
 import { HashingService } from 'src/iam/hashing/hashing.service';
 import { RecordLogService } from 'src/monitor/record-log/record-log.service';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
-
+import { MinioService } from 'src/common/server/minio.service';
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
     private readonly recordLogService: RecordLogService,
+    private readonly minioClient: MinioService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -80,7 +81,27 @@ export class UserService {
     };
   }
 
-  async changePassword(id: number, password: string) {
+  async changePassword(id: number, password: string, oldPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new ConflictException('用户不存在');
+    }
+    // 判断是否是管理员权限 如果是管理员权限则不需要验证原密码
+    if (user.isAdmin) {
+      return this.prisma.user.update({
+        where: { id },
+        data: { password: await this.hashingService.hash(password) },
+      });
+    }
+    const isPasswordValid = await this.hashingService.compare(
+      oldPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new ConflictException('原密码错误');
+    }
     const newPassword = await this.hashingService.hash(password);
     return this.prisma.user.update({
       where: { id },
@@ -114,5 +135,16 @@ export class UserService {
       detail: `删除用户名为 ${userToDelete.nickname}, 账号为 ${userToDelete.account} 的用户`,
     });
     return deleteUser;
+  }
+
+  async uploadAvatar(user: ActiveUserData, file: Express.Multer.File) {
+    await this.minioClient.uploadFile('avatar', file.originalname, file.buffer);
+
+    return this.prisma.user.update({
+      where: { id: user.sub },
+      data: {
+        avatar: `http://39.105.100.190:9000/avatar/${file.originalname}`,
+      },
+    });
   }
 }

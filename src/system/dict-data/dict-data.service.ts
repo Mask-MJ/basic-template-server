@@ -18,8 +18,9 @@ export class DictDataService {
     queryDictDataDto: QueryDictDataDto,
   ) {
     const { page, pageSize } = paginationQueryDto;
-    const { name, value, beginTime, endTime } = queryDictDataDto;
+    const { name, value, dictId, beginTime, endTime } = queryDictDataDto;
     const where = {
+      dictId,
       name: { contains: name },
       value: { contains: value },
       createdAt: { gte: beginTime, lte: endTime },

@@ -22,6 +22,7 @@ import { DictController } from './dict/dict.controller';
 import { DictService } from './dict/dict.service';
 import { DictDataController } from './dict-data/dict-data.controller';
 import { DictDataService } from './dict-data/dict-data.service';
+import { MinioService } from 'src/common/server/minio.service';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { DictDataService } from './dict-data/dict-data.service';
     DictService,
     RecordLogService,
     DictDataService,
+    MinioService,
   ],
 })
 export class SystemModule {}

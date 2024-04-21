@@ -11,9 +11,11 @@ import {
 } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     // 日志
     logger: WinstonModule.createLogger({
       transports: [
@@ -38,6 +40,9 @@ async function bootstrap() {
   // 全局异常过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
   const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: '/static/',
+  });
   // prisma 异常过滤器
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
