@@ -1,0 +1,31 @@
+-- AlterTable
+ALTER TABLE "Valve" ADD COLUMN     "actuator" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "brand" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "caliber" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "deviceId" INTEGER,
+ADD COLUMN     "fault" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "leak" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "level" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "locator" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "material" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "model" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "serial" TEXT NOT NULL DEFAULT '';
+
+-- CreateTable
+CREATE TABLE "Device" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "status" INTEGER NOT NULL DEFAULT 1,
+    "remark" TEXT NOT NULL DEFAULT '',
+    "factoryId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Device_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Device" ADD CONSTRAINT "Device_factoryId_fkey" FOREIGN KEY ("factoryId") REFERENCES "Factory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Valve" ADD CONSTRAINT "Valve_deviceId_fkey" FOREIGN KEY ("deviceId") REFERENCES "Device"("id") ON DELETE SET NULL ON UPDATE CASCADE;
