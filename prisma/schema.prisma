@@ -208,3 +208,12 @@ model Valve {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Unit {
+  id        Int      @id @default(autoincrement())
+  name      String
+  value     String
+  remark    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

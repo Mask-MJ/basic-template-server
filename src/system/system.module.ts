@@ -23,6 +23,8 @@ import { DictService } from './dict/dict.service';
 import { DictDataController } from './dict-data/dict-data.controller';
 import { DictDataService } from './dict-data/dict-data.service';
 import { MinioService } from 'src/common/server/minio.service';
+import { UnitController } from './unit/unit.controller';
+import { UnitService } from './unit/unit.service';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { MinioService } from 'src/common/server/minio.service';
     DeptController,
     DictController,
     DictDataController,
+    UnitController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
@@ -50,6 +53,7 @@ import { MinioService } from 'src/common/server/minio.service';
     RecordLogService,
     DictDataService,
     MinioService,
+    UnitService,
   ],
 })
 export class SystemModule {}

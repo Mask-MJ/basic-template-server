@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Unit" ALTER COLUMN "remark" DROP NOT NULL,
+ALTER COLUMN "remark" DROP DEFAULT;
