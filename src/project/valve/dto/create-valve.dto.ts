@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateValveDto {
   /**
@@ -97,6 +97,7 @@ export class CreateValveDto {
    * 装置id
    * @example 1
    */
+  @IsOptional()
   @IsNumber()
   deviceId?: number;
 

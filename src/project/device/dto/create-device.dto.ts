@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateDeviceDto {
   /**
@@ -34,6 +34,7 @@ export class CreateDeviceDto {
    * 阀门ids
    * @example [1, 2, 3]
    */
+  @IsOptional()
   @IsNumber({}, { each: true })
   valves?: number[];
 }
