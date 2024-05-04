@@ -44,6 +44,7 @@ model User {
   recordLog   RecordLog[]
   factory     Factory[]
   Device      Device[]
+  Contract    Contract[]
 }
 
 /// 角色模型
@@ -231,6 +232,8 @@ model Contract {
   /// 工厂id
   factoryId      Int
   factory        Factory  @relation(fields: [factoryId], references: [id])
+  createrId      Int
+  creater        User     @relation(fields: [createrId], references: [id])
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
