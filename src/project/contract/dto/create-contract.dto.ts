@@ -1,4 +1,6 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
+import * as dayjs from 'dayjs';
 export class CreateContractDto {
   /**
    * 合同名称
@@ -10,9 +12,12 @@ export class CreateContractDto {
 
   /**
    * 签订合同时间
-   * @example '2021-01-01'
+   * @example 1714880210196
    */
-  contractTime: string;
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => dayjs(value).format(), { toClassOnly: true })
+  contractTime: Date;
 
   /**
    * 采购阀门总数
