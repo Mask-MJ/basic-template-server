@@ -131,20 +131,21 @@ model Dict {
 
 /// 字典数据模型
 model DictData {
-  id        Int      @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   /// 字典id
-  dictId    Int
-  dict      Dict     @relation(fields: [dictId], references: [id])
+  dictId       Int
+  dict         Dict           @relation(fields: [dictId], references: [id])
   /// 字典数据名称
-  name      String
+  name         String
   /// 字典数据值
-  value     String
+  value        String
   /// 排序
-  sort      Int      @default(1)
+  sort         Int            @default(1)
   /// 备注
-  remark    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  remark       String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  analysisTask AnalysisTask[]
 }
 
 /// 登录日志模型
@@ -186,28 +187,29 @@ model RecordLog {
 
 /// 工厂模型
 model Factory {
-  id        Int        @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   /// 工厂名称
-  name      String     @unique
+  name         String         @unique
   /// 工厂状态
-  status    Int        @default(1)
+  status       Int            @default(1)
   /// 工厂地址
-  address   String     @default("")
+  address      String         @default("")
   /// 工厂经纬度
-  location  Int[]      @default([])
+  location     Int[]          @default([])
   /// 工厂备注
-  remark    String?
-  children  Factory[]  @relation("FactoryToFactory")
-  parent    Factory?   @relation("FactoryToFactory", fields: [parentId], references: [id])
-  parentId  Int?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  createrId Int
-  creater   User       @relation(fields: [createrId], references: [id])
-  valves    Valve[]
-  role      Role[]
-  Device    Device[]
-  Contract  Contract[]
+  remark       String?
+  children     Factory[]      @relation("FactoryToFactory")
+  parent       Factory?       @relation("FactoryToFactory", fields: [parentId], references: [id])
+  parentId     Int?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  createrId    Int
+  creater      User           @relation(fields: [createrId], references: [id])
+  valves       Valve[]
+  role         Role[]
+  Device       Device[]
+  Contract     Contract[]
+  analysisTask AnalysisTask[]
 }
 
 /// 项目模型
@@ -306,4 +308,28 @@ model Unit {
   remark    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+/// 分析任务表
+model AnalysisTask {
+  id        Int      @id @default(autoincrement())
+  /// 任务名称
+  name      String
+  /// 任务状态 0未开始 1进行中 2已完成
+  status    Int      @default(0)
+  /// pdf文件路径
+  pdfPath   String[]
+  /// 任务备注
+  remark    String   @default("")
+  /// 字典id
+  dictId    Int
+  /// 工厂id
+  factoryId Int
+  createBy  String
+  /// 更新者
+  updateBy  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dict      DictData @relation(fields: [dictId], references: [id])
+  factory   Factory  @relation(fields: [factoryId], references: [id])
 }
