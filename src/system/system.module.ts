@@ -25,8 +25,6 @@ import { DictDataService } from './dict-data/dict-data.service';
 import { MinioService } from 'src/common/server/minio.service';
 import { UnitController } from './unit/unit.controller';
 import { UnitService } from './unit/unit.service';
-import { AnalysisTaskController } from './analysis-task/analysis-task.controller';
-import { AnalysisTaskService } from './analysis-task/analysis-task.service';
 
 @Module({
   imports: [
@@ -42,7 +40,6 @@ import { AnalysisTaskService } from './analysis-task/analysis-task.service';
     DictController,
     DictDataController,
     UnitController,
-    AnalysisTaskController,
   ],
   providers: [
     { provide: HashingService, useClass: BcryptService },
@@ -57,7 +54,6 @@ import { AnalysisTaskService } from './analysis-task/analysis-task.service';
     DictDataService,
     MinioService,
     UnitService,
-    AnalysisTaskService,
   ],
 })
 export class SystemModule {}
