@@ -118,34 +118,34 @@ model Dept {
 
 /// 字典模型
 model Dict {
-  id        Int        @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   /// 字典名称
-  name      String
+  name         String
   /// 字典值
-  value     String
-  remark    String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  dictData  DictData[]
+  value        String
+  remark       String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  dictData     DictData[]
+  analysisTask AnalysisTask[]
 }
 
 /// 字典数据模型
 model DictData {
-  id           Int            @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   /// 字典id
-  dictId       Int
-  dict         Dict           @relation(fields: [dictId], references: [id])
+  dictId    Int
+  dict      Dict     @relation(fields: [dictId], references: [id])
   /// 字典数据名称
-  name         String
+  name      String
   /// 字典数据值
-  value        String
+  value     String
   /// 排序
-  sort         Int            @default(1)
+  sort      Int      @default(1)
   /// 备注
-  remark       String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  analysisTask AnalysisTask[]
+  remark    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /// 登录日志模型
@@ -330,6 +330,6 @@ model AnalysisTask {
   updateBy  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  dict      DictData @relation(fields: [dictId], references: [id])
+  dict      Dict     @relation(fields: [dictId], references: [id])
   factory   Factory  @relation(fields: [factoryId], references: [id])
 }
