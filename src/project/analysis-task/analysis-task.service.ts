@@ -36,6 +36,7 @@ export class AnalysisTaskService {
         take: pageSize,
         skip: (page - 1) * pageSize,
         where,
+        include: { dict: true, factory: true },
       }),
       this.prisma.analysisTask.count({ where }),
     ]);
