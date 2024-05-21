@@ -19,7 +19,7 @@ export class AnalysisTaskService {
     });
   }
 
-  findAll(
+  async findAll(
     paginationQueryDto: PaginationQueryDto,
     queryAnalysisTaskDto: QueryAnalysisTaskDto,
   ) {
@@ -31,11 +31,16 @@ export class AnalysisTaskService {
       status,
       createdAt: { gte: beginTime, lte: endTime },
     };
-    return this.prisma.analysisTask.findMany({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where,
-    });
+    const [data, total] = await Promise.all([
+      this.prisma.analysisTask.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        where,
+      }),
+      this.prisma.analysisTask.count({ where }),
+    ]);
+
+    return { data, total, page, pageSize };
   }
 
   findOne(id: number) {

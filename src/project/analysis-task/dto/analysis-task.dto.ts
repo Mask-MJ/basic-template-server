@@ -16,7 +16,7 @@ export class CreateAnalysisTaskDto {
    */
   @IsEnum([0, 1, 2, 3])
   @Transform(({ value }) => parseInt(value), { toClassOnly: true })
-  status: number;
+  status: number = 0;
   /**
    * pdf路径
    * @example ['path1', 'path2']
